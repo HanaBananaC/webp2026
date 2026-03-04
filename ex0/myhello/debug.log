@@ -1,0 +1,21 @@
+[INFO] 2026-03-04 23:55:41,264 | django.utils.autoreload:681 | Watching for file changes with StatReloader
+[INFO] 2026-03-04 23:55:43,683 | django.utils.autoreload:265 | C:\Users\HB\web\hello_django\ex0\myhello\hello_django\settings.py changed, reloading.
+[INFO] 2026-03-04 23:55:44,461 | django.utils.autoreload:681 | Watching for file changes with StatReloader
+[INFO] 2026-03-04 23:55:45,849 | django.utils.autoreload:265 | C:\Users\HB\web\hello_django\ex0\myhello\hello_django\settings.py changed, reloading.
+[INFO] 2026-03-04 23:55:46,712 | django.utils.autoreload:681 | Watching for file changes with StatReloader
+[INFO] 2026-03-04 23:56:06,789 | django.utils.autoreload:265 | C:\Users\HB\web\hello_django\ex0\myhello\myhello\views.py changed, reloading.
+[INFO] 2026-03-04 23:56:07,729 | django.utils.autoreload:681 | Watching for file changes with StatReloader
+[INFO] 2026-03-04 23:56:47,870 | django.utils.autoreload:265 | C:\Users\HB\web\hello_django\ex0\myhello\myhello\views.py changed, reloading.
+[INFO] 2026-03-04 23:56:48,752 | django.utils.autoreload:681 | Watching for file changes with StatReloader
+[INFO] 2026-03-04 23:59:05,249 | django.utils.autoreload:681 | Watching for file changes with StatReloader
+[DEBUG] 2026-03-04 23:59:21,532 | myhello.views:7 | Something happened!
+[INFO] 2026-03-04 23:59:21,535 | django.server:249 | "GET /myhello/ HTTP/1.1" 200 9
+[DEBUG] 2026-03-04 23:59:33,750 | myhello.views:7 | Something happened!
+[INFO] 2026-03-04 23:59:33,751 | django.server:249 | "GET /myhello/?name=B1329002 HTTP/1.1" 200 14
+[INFO] 2026-03-05 00:04:36,177 | django.utils.autoreload:265 | C:\Users\HB\web\hello_django\ex0\myhello\myhello\views.py changed, reloading.
+[INFO] 2026-03-05 00:04:37,248 | django.utils.autoreload:681 | Watching for file changes with StatReloader
+[INFO] 2026-03-05 00:04:59,698 | django.utils.autoreload:681 | Watching for file changes with StatReloader
+[DEBUG] 2026-03-05 00:05:20,331 | myhello.views:7 | Something happened!
+[INFO] 2026-03-05 00:05:20,333 | django.server:249 | "GET /myhello/ HTTP/1.1" 200 9
+[DEBUG] 2026-03-05 00:05:32,045 | myhello.views:7 | Something happened!
+[INFO] 2026-03-05 00:05:32,046 | django.server:249 | "GET /myhello/?name=Lan HTTP/1.1" 200 9
