@@ -53,3 +53,14 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+
+# Python virtual env
+venv/
+.env
