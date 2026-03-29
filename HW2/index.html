@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>HW2</title>
+<style>
+body{
+  margin:0;
+  background:#efefef;
+  font-family: Arial, Helvetica, sans-serif;
+  color:#333;
+}
+
+.wrapper{
+  width: 1120px;
+  margin: 22px auto;
+}
+
+.sub-title{
+  font-size: 34px;
+  font-weight: 700;
+  margin: 0 0 18px 0;
+}
+
+/* 主表格 */
+#csie{
+  border-collapse: collapse;
+  width: 100%;
+  background: #fff;
+}
+
+#csie td, #csie th{
+  border: 1px solid #dcdcdc;
+  padding: 10px 12px;
+  font-size: 16px;
+}
+
+#csie tr:nth-child(even){
+  background-color:#f3f3f3;
+}
+
+#csie tr:hover{
+  background-color:#e8e8e8;
+}
+
+#csie th{
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align:left;
+  background-color:#04AA6D;
+  color:white;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.course-link{
+  cursor:pointer;
+  color:#222;
+  text-decoration:none;
+}
+
+.course-link:hover{
+  color:#c73a2d;
+}
+
+#changeBtn{
+  margin-top: 10px;
+  font-size: 14px;
+  padding: 4px 12px;
+  border: 1px solid #999;
+  background: #f7f7f7;
+  cursor: pointer;
+}
+
+/* 遮罩 */
+#overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.08);
+  z-index:999;
+}
+
+/* popover */
+#popoverBox{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background:#f6f6f6;
+  border: 1px solid #8d8d8d;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  z-index:1000;
+}
+
+.pop-header{
+  font-size: 19px;
+  font-weight: 700;
+  color:#555;
+  padding: 14px 16px;
+  border-bottom: 1px solid #dcdcdc;
+  background:#fafafa;
+  border-radius: 12px 12px 0 0;
+}
+
+.close-btn{
+  float:right;
+  border:none;
+  background:none;
+  font-size:18px;
+  cursor:pointer;
+  color:#7d7d7d;
+}
+
+.tabs{
+  display:flex;
+  gap:10px;
+  padding: 12px 14px 8px 14px;
+  background:#f6f6f6;
+}
+
+.tab{
+  flex:1;
+  text-align:center;
+  font-size:14px;
+  color:#8c8c8c;
+  padding:10px 0 8px 0;
+  border-bottom:2px solid #e5a54a;
+}
+
+.tab.active{
+  color:#444;
+  background:#fffdf8;
+  border:1px solid #e5a54a;
+  border-bottom:2px solid #e5a54a;
+  border-radius:6px 6px 0 0;
+}
+
+.detail-wrap{
+  padding: 12px 14px 18px 14px;
+}
+
+/* 詳細資料表 */
+.detail-table{
+  width:100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size:14px;
+  background:#fff;
+  border:1px solid #ececec;
+  border-radius: 12px;
+  overflow:hidden;
+}
+
+.detail-table td{
+  border-bottom:1px solid #ececec;
+  padding:10px 14px;
+  vertical-align: top;
+  background:#fff;
+}
+
+.detail-table tr:last-child td{
+  border-bottom:none;
+}
+
+.detail-table td:first-child{
+  width:26%;
+  background:#fff;
+  color:#444;
+  white-space: nowrap;
+}
+
+/* 上課時間地點內表格 */
+.small-table{
+  width:100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  border:1px solid #ececec;
+  border-radius:12px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.small-table th,
+.small-table td{
+  border-right:1px solid #ececec;
+  border-bottom:1px solid #ececec;
+  padding:8px 8px;
+  font-size:12px;
+  text-align:left;
+  vertical-align: top;
+}
+
+.small-table th:last-child,
+.small-table td:last-child{
+  border-right:none;
+}
+
+.small-table tr:last-child td{
+  border-bottom:none;
+}
+
+.small-table th{
+  background:#f2f4f5;
+  color:#333;
+  font-weight:700;
+}
+
+.col-day{ width: 14%; white-space: nowrap; }
+.col-time{ width: 34%; white-space: nowrap; }
+.col-room{ width: 30%; white-space: nowrap; }
+.col-week{ width: 22%; white-space: nowrap; }
+
+.note{
+  color:#b36b1f;
+}
+
+.fake-link{
+  color:#c58a3a;
+  white-space: nowrap;
+}
+
+.nowrap{
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="sub-title">資工選課表</div>
+
+  <table id="csie">
+    <tr>
+      <th style="width:20%;">開課單位</th>
+      <th style="width:44%;">課程名稱</th>
+      <th style="width:36%;">授課教師</th>
+    </tr>
+
+    <tr>
+      <td>資工系</td>
+      <td><span class="course-link" onclick="openCoursePopover('114/2','黃崇源','資工系','3-甲','IT3004(3)','物件導向軟體設計','A2337','本校: 64人；外校: 0人','10~60','星期五','2 (09:10) ~ 4 (12:00)','資工系電腦教室2','每週上課')">物件導向軟體設計</span></td>
+      <td>黃崇源</td>
+    </tr>
+
+    <tr>
+      <td>資工系</td>
+      <td><span class="course-link" onclick="openCoursePopover('114/2','李春良','資工系','3-甲','IT3005(3)','計算機網路實驗','A2338','本校: 64人；外校: 0人','10~60','星期四','3 (10:10) ~ 5 (13:00)','資工系電腦教室1','每週上課')">計算機網路實驗</span></td>
+      <td>李春良</td>
+    </tr>
+
+    <tr>
+      <td>資工系</td>
+      <td><span class="course-link" onclick="openCoursePopover('114/2','張哲維','資工系','3-甲','IT3006(3)','作業系統實務','A2339','本校: 64人；外校: 0人','10~60','星期三','2 (09:10) ~ 4 (12:00)','第一教學大樓','每週上課')">作業系統實務</span></td>
+      <td>張哲維</td>
+    </tr>
+
+    <tr>
+      <td>資工系</td>
+      <td><span class="course-link" onclick="openCoursePopover('114/2','陳光武','資工系','3-甲','IT3007(3)','生物統計','A2340','本校: 64人；外校: 0人','10~60','星期二','6 (14:10) ~ 8 (17:00)','第二教學大樓','每週上課')">生物統計</span></td>
+      <td>陳光武</td>
+    </tr>
+
+    <tr>
+      <td>資工系</td>
+      <td><span class="course-link" onclick="openCoursePopover('114/2','陳仁暉','資工系','3-甲','IT3008(3)','通訊系統','A2341','本校: 64人；外校: 0人','10~60','星期一','2 (09:10) ~ 4 (12:00)','工學大樓','每週上課')">通訊系統</span></td>
+      <td>陳仁暉</td>
+    </tr>
+
+    <tr>
+      <td>資工系</td>
+      <td><span class="course-link" onclick="openCoursePopover('114/2','魏志達','資工系','3-甲','IT3009(3)','軟硬體專題(2)','A2342','本校: 64人；外校: 0人','10~60','星期五','5 (13:10) ~ 7 (16:00)','資工系專題教室','每週上課')">軟硬體專題(2)</span></td>
+      <td>魏志達</td>
+    </tr>
+  </table>
+
+  <button id="changeBtn" onclick="changeResult()">Change</button>
+</div>
+
+<div id="overlay" onclick="closeCoursePopover()"></div>
+
+<div id="popoverBox">
+  <div class="pop-header">
+    課程詳細資料 🖨
+    <button class="close-btn" onclick="closeCoursePopover()">✕</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active">課程資訊</div>
+    <div class="tab">教學大綱</div>
+    <div class="tab">教學進度</div>
+    <div class="tab">先修課程</div>
+  </div>
+
+  <div class="detail-wrap">
+    <table class="detail-table">
+      <tr><td>學年/學期</td><td class="nowrap" id="p_term"></td></tr>
+      <tr><td>授課教師</td><td class="nowrap" id="p_teacher"></td></tr>
+      <tr><td>開課單位</td><td class="nowrap" id="p_dept"></td></tr>
+      <tr><td>年級-班別</td><td class="nowrap" id="p_grade"></td></tr>
+      <tr><td>科目代號(學分)</td><td class="nowrap" id="p_credit"></td></tr>
+      <tr><td>課程名稱</td><td class="nowrap" id="p_title"></td></tr>
+      <tr><td>開課序號</td><td class="nowrap" id="p_code"></td></tr>
+      <tr><td>主要開課序號</td><td></td></tr>
+      <tr><td>修課學生</td><td class="nowrap" id="p_students"></td></tr>
+      <tr><td>人數限制</td><td class="nowrap" id="p_limit"></td></tr>
+      <tr>
+        <td>上課時間地點</td>
+        <td>
+          <table class="small-table">
+            <tr>
+              <th class="col-day">星期</th>
+              <th class="col-time">開始 / 結束</th>
+              <th class="col-room">教室 <span class="note">[代碼說明]</span></th>
+              <th class="col-week"></th>
+            </tr>
+            <tr>
+              <td class="col-day nowrap" id="p_day"></td>
+              <td class="col-time nowrap" id="p_time"></td>
+              <td class="col-room nowrap" id="p_room"></td>
+              <td class="col-week nowrap" id="p_weekly"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr><td>核心能力</td><td class="fake-link">按此查詢</td></tr>
+      <tr><td>備註</td><td></td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+function changeResult() {
+  var myTable = document.getElementById("csie");
+  myTable.rows[1].cells[2].innerHTML = "李春良";
+}
+
+function openCoursePopover(term, teacher, dept, grade, credit, title, code, students, limit, day, time, room, weekly) {
+  document.getElementById("p_term").textContent = term;
+  document.getElementById("p_teacher").textContent = teacher;
+  document.getElementById("p_dept").textContent = dept;
+  document.getElementById("p_grade").textContent = grade;
+  document.getElementById("p_credit").textContent = credit;
+  document.getElementById("p_title").textContent = title;
+  document.getElementById("p_code").textContent = code;
+  document.getElementById("p_students").textContent = students;
+  document.getElementById("p_limit").textContent = limit;
+  document.getElementById("p_day").textContent = day;
+  document.getElementById("p_time").textContent = time;
+  document.getElementById("p_room").textContent = room;
+  document.getElementById("p_weekly").textContent = weekly;
+
+  document.getElementById("overlay").style.display = "block";
+  document.getElementById("popoverBox").style.display = "block";
+}
+
+function closeCoursePopover() {
+  document.getElementById("overlay").style.display = "none";
+  document.getElementById("popoverBox").style.display = "none";
+}
+</script>
+
+</body>
+</html>
