@@ -1,1 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>景點觀光展覽資訊</title>
+  <style>
+    body {
+      font-family: Arial, "Microsoft JhengHei", sans-serif;
+      margin: 30px;
+    }
 
+    h1 {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    input {
+      width: 180px;
+      height: 35px;
+      font-size: 20px;
+      vertical-align: middle;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #08b57a;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .pagination {
+      margin-top: 20px;
+      font-size: 28px;
+    }
+
+    .pagination button {
+      font-size: 24px;
+      padding: 5px 12px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>景點觀光展覽資訊</h1>
+  <input type="text" id="keyword" onchange="searchByName()" placeholder="請輸入名稱關鍵字">
+
+  <table id="csie">
+    <thead>
+      <tr>
+        <th>名稱</th>
+        <th>地點</th>
+        <th>票價</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <div class="pagination">
+    <button onclick="prevPage()">上一頁</button>
+    <span id="pageInfo">1 / 1 頁</span>
+    <button onclick="nextPage()">下一頁</button>
+  </div>
+
+  <script>
+    var openUrl = "https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6";
+
+    var allData = [];        // 原始資料
+    var filteredData = [];   // 搜尋後資料
+    var currentPage = 1;     // 目前頁數
+    var pageSize = 10;       // 每頁 10 筆
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", openUrl, true);
+    xhr.send();
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        allData = JSON.parse(this.responseText);
+        filteredData = allData;
+        renderTable();
+      }
+    };
+
+    function renderTable() {
+      var tableBody = document.getElementById("tableBody");
+      tableBody.innerHTML = "";
+
+      var totalPages = Math.ceil(filteredData.length / pageSize);
+      if (totalPages === 0) {
+        totalPages = 1;
+      }
+
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      var startIndex = (currentPage - 1) * pageSize;
+      var endIndex = startIndex + pageSize;
+      var pageData = filteredData.slice(startIndex, endIndex);
+
+      pageData.forEach(function (data) {
+        var row = document.createElement("tr");
+
+        var title = data.title || "";
+        var location = "";
+        var price = "";
+
+        if (data.showInfo && data.showInfo.length > 0) {
+          location = data.showInfo[0].location || "";
+          price = data.showInfo[0].price || "";
+        }
+
+        row.innerHTML = `
+          <td>${title}</td>
+          <td>${location}</td>
+          <td>${price}</td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+
+      document.getElementById("pageInfo").innerText = currentPage + " / " + totalPages + " 頁";
+    }
+
+    function searchByName() {
+      var keyword = document.getElementById("keyword").value.trim();
+
+      filteredData = allData.filter(function (data) {
+        return data.title && data.title.indexOf(keyword) !== -1;
+      });
+
+      currentPage = 1;
+      renderTable();
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+      }
+    }
+
+    function nextPage() {
+      var totalPages = Math.ceil(filteredData.length / pageSize);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderTable();
+      }
+    }
+  </script>
+</body>
+</html>
