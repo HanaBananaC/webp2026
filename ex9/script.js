@@ -1,5 +1,5 @@
 const API_KEY = 'ca370d51a054836007519a00ff4ce59e';
-const PER_PAGE = 6;
+const PER_PAGE = 10;
 
 const imglist_Url = `https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${API_KEY}&per_page=${PER_PAGE}&format=json&nojsoncallback=1`;
 
